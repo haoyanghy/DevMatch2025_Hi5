@@ -1,0 +1,12 @@
+.risk-banner {
+  background: #ffeee5;
+  color: #c15420;
+  font-weight: 700;
+  font-size: 1.12em;
+  padding: 14px 7px;
+  border-radius: 7px;
+  text-align: center;
+  margin-bottom: 16px;
+  margin-top: 10px;
+  box-shadow: 0 2px 10px rgba(221,110,55,0.05);
+}

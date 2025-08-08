@@ -1,0 +1,114 @@
+.navbar {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 14px rgba(5,52,98,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.28rem;
+  color: #646cff;
+  gap: 8px;
+}
+.nav-logo img {
+  height: 34px;
+  display: inline-block;
+}
+.navbar-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar-links a {
+  color: #2369be;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.17s;
+}
+.navbar-links a:hover {
+  color: #1fb7ff;
+}
+.navbar-cta {
+  display: flex;
+  gap: 12px;
+  padding: 0 4vw;
+}
+.nav-btn {
+  padding: 7px 24px;
+  border-radius: 24px;
+  font-weight: 600;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.nav-login {
+  background: none;
+  color: #163a5f;
+  border: 1px solid #e5edf7;
+}
+.nav-register {
+  background: linear-gradient(90deg, #1cec63, #1fb7ff);
+  color: #fff;
+  border: none;
+  transition: background 0.18s;
+}
+.nav-register:hover {
+  background: #ffd800;
+  color: #163a5f;
+}
+@media (max-width: 900px) {
+  .navbar-links { gap: 12px; }
+  .navbar-cta .nav-btn { padding: 7px 14px; font-size: 0.93em; }
+}
+@media (max-width: 650px) {
+  .navbar { flex-direction: column; height: auto; padding: 8px 4vw;}
+  .navbar-links, .navbar-cta { flex-direction: column; gap: 8px;}
+}
+
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 1px 7px rgba(17, 60, 100, 0.13);
+}
+.nav-username {
+  font-weight: 700;
+  color: #175b9c;
+}
+.nav-logout {
+  background: none;
+  border: 1px solid #e5edf7;
+  color: #d96060;
+  border-radius: 24px;
+  padding: 5px 14px;
+  font-size: 1em;
+  margin-left: 7px;
+  cursor: pointer;
+}
+.nav-logout:hover {
+  background: #fee0e0;
+}

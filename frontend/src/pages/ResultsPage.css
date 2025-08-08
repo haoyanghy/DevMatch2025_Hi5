@@ -1,0 +1,250 @@
+.results-bg {
+  background: linear-gradient(125deg, #eaf4ff 60%, #fffef3 100%);
+  min-height: 100vh;
+  padding: 32px 0;
+}
+.results-container {
+  background: #fff;
+  margin: 0 auto;
+  max-width: 800px;
+  border-radius: 20px;
+  box-shadow: 0 6px 22px rgba(41, 150, 200, 0.09);
+  padding: 25px 23px 50px 23px;
+}
+.trader-profile h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #14549e;
+  margin: 0 0 5px 0;
+}
+.profile-desc {
+  color: #179e85;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.trader-meta {
+  margin: 10px 0;
+  color: #696b7a;
+  font-size: 1em;
+}
+.trading-style-box {
+  margin: 10px 0 15px 0;
+  background: #d9f7eb;
+  display: inline-block;
+  padding: 5px 13px;
+  border-radius: 14px;
+  color: #10759b;
+}
+.top-holdings {
+  margin: 7px 0;
+}
+.hold-link {
+  color: #1fb7ff;
+  margin-right: 9px;
+  text-decoration: none;
+  font-weight: 700;
+}
+.hold-link:hover {
+  text-decoration: underline;
+  color: #1559d3;
+}
+.trades-title {
+  margin-top: 32px;
+  font-size: 1.17em;
+  color: #1b5793;
+}
+.trades-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+.trades-table th {
+  background: #f2f7fb;
+  color: #14549e;
+  text-align: left;
+  padding: 7px 7px;
+}
+.trades-table td {
+  background: #fff;
+  color: #254662;
+  padding: 7px 7px;
+  border-bottom: 1px solid #e5eefa;
+}
+.show-crypto-btn {
+  background: #1fb7ff;
+  color: #fff;
+  border: none;
+  padding: 9px 19px;
+  border-radius: 16px;
+  font-weight: 600;
+  margin-top: 16px;
+  cursor: pointer;
+}
+.show-crypto-btn:hover {
+  background: #ffd800;
+  color: #163a5f;
+}
+.crypto-info {
+  margin: 18px 0 0 0;
+  background: #ecfbea;
+  border-radius: 12px;
+  padding: 17px;
+}
+.chart-placeholder {
+  background: #d3eefd;
+  height: 115px;
+  border-radius: 10px;
+  margin-top: 4px;
+  color: #2375b3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-holdings {
+  margin: 14px 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.hold-chip {
+  background: #f0f9ff;
+  margin: 0 3px;
+  border: none;
+  border-radius: 18px;
+  font-weight: 700;
+  color: #137ae0;
+  padding: 9px 17px;
+  cursor: pointer;
+  transition: background 0.14s, color 0.16s;
+  font-size: 1em;
+  box-shadow: 0 2px 6px rgba(30, 170, 255, 0.08);
+}
+.hold-chip.active,
+.hold-chip:hover {
+  background: #1fb7ff;
+  color: #fff;
+}
+
+.holding-detail-box {
+  margin: 22px 0 16px 0;
+  background: #f8fcff;
+  border-radius: 15px;
+  padding: 19px 13px 15px 19px;
+  box-shadow: 0 2px 14px rgba(31, 183, 255, 0.09);
+}
+.holding-detail-box h3 {
+  font-size: 1.15em;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.holding-detail-box a {
+  color: #1fb7ff;
+  text-decoration: none;
+  font-weight: 700;
+}
+.holding-detail-box a:hover {
+  text-decoration: underline;
+}
+
+.mini-chart {
+  display: flex;
+  align-items: flex-end;
+  height: 80px;
+  margin: 10px 0 0 0;
+  background: #e4f5f7;
+  padding: 7px 6px;
+  border-radius: 8px;
+  gap: 2px;
+}
+.chart-labels {
+  display: flex;
+  gap: 8px;
+  color: #888;
+  font-size: 0.95em;
+  padding: 0 5px;
+  margin-top: 3px;
+}
+
+.chart-section {
+  margin: 20px 0 10px 0;
+  padding: 8px 0;
+}
+
+.mini-chart,
+.radar-chart {
+  background: #e6f3fc;
+  min-height: 110px;
+  border-radius: 10px;
+  margin: 10px 0 4px 0;
+  padding: 12px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+}
+
+.crypto-about {
+  margin-left: 12px;
+  color: #375e77;
+  font-size: 1.04em;
+  font-weight: 500;
+}
+.crypto-keyfacts {
+  background: #f6faff;
+  border-radius: 12px;
+  margin-top: 7px;
+  padding: 13px 15px;
+}
+.crypto-keyfacts h4 {
+  margin: 0 0 6px 0;
+  color: #176dc4;
+  font-size: 1.08em;
+}
+.crypto-keyfacts table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 9px 0;
+}
+.crypto-keyfacts tr td {
+  padding: 4px 7px 4px 0;
+  color: #444;
+  font-size: 1em;
+}
+.crypto-keyfacts ul {
+  margin: 0 0 7px 15px;
+  padding: 0;
+  color: #22629c;
+}
+.crypto-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: 4px;
+}
+.crypto-links a {
+  color: #239edc;
+  font-weight: 600;
+  text-decoration: none;
+}
+.crypto-links a:hover {
+  text-decoration: underline;
+  color: #125696;
+}
+.gain {
+  color: #1ab24a;
+  font-weight: 700;
+}
+.loss {
+  color: #dc3232;
+  font-weight: 700;
+}
+.external-chart-link {
+  color: #1885c8;
+  font-weight: 600;
+  font-size: 1.03em;
+}
+.external-chart-link:hover {
+  text-decoration: underline;
+}
