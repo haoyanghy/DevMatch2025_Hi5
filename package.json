@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@oasisprotocol/sapphire-hardhat": "^2.22.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1"
+  }
+}
