@@ -1,23 +1,44 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./RegisterLogin.css";
 
-function LoginPage() {
+function LoginPage({ setUser }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
-  function handleSubmit(e) {
+
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     if (!form.email || !form.password) {
       setError("Please enter your email and password.");
       return;
     }
-    navigate("/dashboard");
+    
+    setSubmitting(true);
+    try {
+      const response = await axios.post("http://localhost:8000/api/login", form);
+
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      setUser(response.data.user);
+      
+      window.location.href = "/dashboard";
+      
+    } catch (err) {
+      setError(
+        err.response?.data?.message || 
+        "Login failed. Invalid credentials."
+      );
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -29,36 +50,41 @@ function LoginPage() {
             <label>
               Email
               <input
-                type="email"
                 name="email"
-                autoComplete="email"
+                type="email"
+                placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                placeholder="Your email"
-                required
+                disabled={submitting}
               />
             </label>
             <label>
               Password
               <input
-                type="password"
                 name="password"
-                autoComplete="current-password"
+                type="password"
+                placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                placeholder="Password"
-                required
+                disabled={submitting}
               />
             </label>
+            
+            <button type="submit" className="auth-submit" disabled={submitting}>
+              {submitting ? "Logging in..." : "Log In"}
+            </button>
+
             {error && <div className="auth-error">{error}</div>}
-            <button type="submit" className="auth-submit">Log In</button>
+
+            <div className="auth-actions">
+              <Link to="#" className="auth-link">Forgot password?</Link>
+            </div>
+
+            <div className="auth-actions">
+              New user? <Link to="/register">Create account</Link>
+            </div>
           </form>
-          <div className="auth-actions">
-            <Link to="#" className="auth-link">Forgot password?</Link>
-          </div>
-          <p className="auth-footer">
-            New user? <Link to="/register">Create account</Link>
-          </p>
+          
         </div>
         <div className="auth-card-side">
           <h4>Secure Login</h4>

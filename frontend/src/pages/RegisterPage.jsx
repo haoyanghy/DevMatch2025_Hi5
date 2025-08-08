@@ -1,17 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./RegisterLogin.css";
 
 function RegisterPage() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [walletStatus, setWalletStatus] = useState("idle");
   const [submitting, setSubmitting] = useState(false);
-
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -29,20 +25,19 @@ function RegisterPage() {
     setSubmitting(true);
 
     try {
-      await fakeRegisterApi(form); 
+      await axios.post("http://localhost:8000/api/register", form);
+
       setWalletStatus("creating");
-
-      await new Promise(res => setTimeout(res, 1000)); 
+      await new Promise(res => setTimeout(res, 1000));
       setWalletStatus("created");
-
       setTimeout(() => {
-        navigate("/login", {
-          state: { email: form.email }, 
-        });
-      }, 1200); 
-
+        navigate("/login", { state: { email: form.email } });
+      }, 1200);
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError(
+        err.response?.data?.message ||
+        "Registration failed. Please try again."
+      );
       setSubmitting(false);
     }
   }
@@ -56,58 +51,49 @@ function RegisterPage() {
             <label>
               Name
               <input
-                type="text"
                 name="name"
-                autoComplete="name"
+                type="text"
+                placeholder="Name"
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Your Name"
-                required
-                disabled={walletStatus !== "idle"}
+                disabled={submitting}
               />
             </label>
             <label>
               Email
               <input
-                type="email"
                 name="email"
-                autoComplete="email"
+                type="email"
+                placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                placeholder="your@email.com"
-                required
-                disabled={walletStatus !== "idle"}
+                disabled={submitting}
               />
             </label>
             <label>
               Password
               <input
-                type="password"
                 name="password"
-                autoComplete="new-password"
+                type="password"
+                placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                placeholder="Create a password"
-                required
-                disabled={walletStatus !== "idle"}
+                disabled={submitting}
               />
             </label>
 
+            <button type="submit" className="auth-submit" disabled={submitting}>
+              {submitting ? "Registering..." : "Register"}
+            </button>
+
             {walletStatus === "creating" && (
-              <div className="wallet-loader">Creating your wallet…</div>
+              <div className="wallet-msg">Creating wallet...</div>
             )}
             {walletStatus === "created" && (
-              <div className="wallet-success">Wallet created <span>✔</span></div>
+              <div className="wallet-msg success">Wallet created!</div>
             )}
-            {error && <div className="auth-error">{error}</div>}
+            {error && <div className="error-msg">{error}</div>}
 
-            <button
-              type="submit"
-              className="auth-submit"
-              disabled={walletStatus !== "idle" || submitting}
-            >
-              Sign Up
-            </button>
           </form>
           <p className="auth-footer">
             Already have an account? <Link to="/login">Log in</Link>

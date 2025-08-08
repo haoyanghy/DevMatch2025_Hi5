@@ -11,12 +11,14 @@ function Navbar({ user, onLogout }) {
         </Link>
       </div>
 
-      <ul className="navbar-links">
-        <li><Link to="/dashboard">Dashboard</Link></li>
-        <li><Link to="/education">Learn</Link></li>
-        <li><Link to="/support">Support</Link></li>
-        <li><Link to="/about">About</Link></li>
-      </ul>
+      {user && (
+        <div className="navbar-links">
+          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/learn">Learn</Link>
+          <Link to="/support">Support</Link>
+          <Link to="/about">About</Link>
+        </div>
+      )}
 
       <div className="navbar-cta">
         {!user ? (
@@ -25,11 +27,20 @@ function Navbar({ user, onLogout }) {
             <Link to="/register" className="nav-btn nav-register">Get Started</Link>
           </>
         ) : (
-          <div className="nav-user">
-            <img className="nav-avatar" src={user.avatar} alt={user.name} />
-            <span className="nav-username">{user.name}</span>
-
-            <button className="nav-btn nav-logout" onClick={onLogout}>Log out</button>
+          <div className="user-profile">
+            <Link to="/profile" className="profile-link">
+              <div className="profile-pic">
+                <img 
+                  src={user.profilePicture || user.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random&color=fff&rounded=true&size=40`}
+                  alt={`${user.name}'s profile`}
+                  className="profile-image"
+                />
+              </div>
+            </Link>
+            <Link to="/profile" className="username-link">
+              <span className="username">{user.name}</span>
+            </Link>
+            <button onClick={onLogout} className="nav-btn nav-logout">Log out</button>
           </div>
         )}
       </div>

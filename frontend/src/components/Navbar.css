@@ -1,7 +1,7 @@
 .navbar {
   width: 100%;
   background: #fff;
-  box-shadow: 0 2px 14px rgba(5,52,98,0.10);
+  box-shadow: 0 2px 14px rgba(5, 52, 98, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -74,14 +74,26 @@
   color: #163a5f;
 }
 @media (max-width: 900px) {
-  .navbar-links { gap: 12px; }
-  .navbar-cta .nav-btn { padding: 7px 14px; font-size: 0.93em; }
+  .navbar-links {
+    gap: 12px;
+  }
+  .navbar-cta .nav-btn {
+    padding: 7px 14px;
+    font-size: 0.93em;
+  }
 }
 @media (max-width: 650px) {
-  .navbar { flex-direction: column; height: auto; padding: 8px 4vw;}
-  .navbar-links, .navbar-cta { flex-direction: column; gap: 8px;}
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 8px 4vw;
+  }
+  .navbar-links,
+  .navbar-cta {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
-
 
 .nav-user {
   display: flex;
@@ -111,4 +123,174 @@
 }
 .nav-logout:hover {
   background: #fee0e0;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e1e5e9;
+  background: #f8f9fa;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #bbb;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .username {
+    display: none; /* Hide username on mobile to save space */
+  }
+
+  .profile-pic {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e1e5e9;
+  background: #f8f9fa;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #bbb;
+  color: #333;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e1e5e9;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.username {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.logout-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #bbb;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .username {
+    display: none;
+  }
+
+  .profile-pic {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logout-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 }
