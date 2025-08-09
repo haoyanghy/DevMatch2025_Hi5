@@ -76,6 +76,13 @@ contract Trading {
                 new bytes(0)
             )
         );
+
+        bytes memory encryptedPortfolio = Sapphire.encrypt(
+            bytes32(uint256(uint160(msg.sender))), 
+            bytes32(0),                            
+            encryptedPortfolio,                           
+            new bytes(0)                           
+        );
         
         users[msg.sender] = User({
             role: role,
@@ -95,10 +102,10 @@ contract Trading {
         
         // Encrypt preferences on-chain
         bytes memory encryptedPreferences = Sapphire.encrypt(
-            bytes32(uint256(uint160(msg.sender))), // Use sender address as key
-            bytes32(0),                            // Nonce
-            preferences,                           // Plaintext preferences
-            new bytes(0)                           // Additional data
+            bytes32(uint256(uint160(msg.sender))), 
+            bytes32(0),                            
+            preferences,                           
+            new bytes(0)                           
         );
         
         users[msg.sender].encryptedPreferences = encryptedPreferences;
