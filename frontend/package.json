@@ -12,10 +12,13 @@
   "dependencies": {
     "axios": "^1.11.0",
     "chart.js": "^4.5.0",
+    "ethers": "^6.15.0",
+    "metamask-react": "^2.7.0",
     "react": "^19.1.1",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.7.1"
+    "react-router-dom": "^7.7.1",
+    "recharts": "^3.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

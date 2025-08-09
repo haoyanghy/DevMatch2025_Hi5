@@ -1,262 +1,425 @@
 import React, { useState } from "react";
-import { Line, Radar } from "react-chartjs-2";
-import { Chart as ChartJS, LineElement, PointElement, LinearScale, CategoryScale, RadialLinearScale, Filler, Tooltip, Legend, Title } from "chart.js";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+
 import "./ResultsPage.css";
-ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, RadialLinearScale, Filler, Tooltip, Legend, Title);
 
 const mentor = {
   name: "Crypto Mentor",
-  profile: "Top AI-Selected Crypto Investor",
+  profile: "AI-Selected Crypto Portfolio",
   lastUpdate: "2025-08-08",
-  turnover: "3.2%",
-  portfolioValue: "$15.21 M",
-  holdings: [
-    {
-      symbol: "BTC", name: "Bitcoin",
-      percent: "40.5",
-      url: "https://www.tradingview.com/chart/?symbol=CRYPTO%3ABTCUSD",
-      price: 117355.29, priceChange: 2375.45, priceChangePct: 2.07,
-      priceHistory: [30000,33000,38000,43000,49000,51000,70000,80000,90000,100000,112000,117000],
-      gfScore: { labels: ["Valuation", "Growth", "Profitability", "Safety", "Momentum"], values: [6.2,8.7,9.4,8.8,9.6] },
-      about: "The original, largest, and most adopted cryptocurrency, used as both store-of-value and payment.",
-      stats: {
-        "Market Cap": "2.34T USD", "ATH": "123,217.39 USD", "Volume 24h": "59.38B USD", "Circulating Supply": "19.90 M", "Max Supply": "21.00 M"
-      },
-      facts: [
-        "US executive order allows Bitcoin in 401(k) plans.",
-        "SBI Japan launching Bitcoin ETF on Tokyo Exchange.",
-        "BTC retests $108K support—potential for 50% rise."
-      ],
-      news: [
-        { source: "CryptoPotato", time: "13 mins ago", headline: "Trump Signs Executive Order to Allow Bitcoin and Crypto in 401(k)s" },
-        { source: "ZyCrypto", time: "2h ago", headline: "Bitcoin's 1070 Days Cycle Shows Capacity to Rise to $300,000 in 2025" }
-      ],
-      website: "https://bitcoin.org/",
-      whitepaper: "https://bitcoin.org/bitcoin.pdf"
+  periodReturn: "24.7%",
+  capitalInvested: "$12.50M",
+  period: "6 Months",
+  upside: "500.00",
+  
+  // Basic Stats
+  tradingDays: 386,
+  stabilityIndex: "5.0/5.0",
+  sevenDayMatched: 727,
+  
+  // Performance data for different periods
+  performance: {
+    "7": {
+      roi: "+9.26%",
+      masterPnL: "+2,324.12",
+      winRate: "53.66%",
+      followersPnL: "+11.96",
+      maxDrawdown: "4.07%",
+      avgPnLPerTrade: "+36.57",
+      wins: 31,
+      losses: 35,
+      profitLossRatio: "2.02 : 1",
+      weeklyTrades: "69.07",
+      avgHoldingTime: "1.03Days",
+      roiVolatility: "3.60%",
+      sharpeRatio: "0.97",
+      sortinoRatio: "1.75"
     },
-    {
-      symbol: "ETH", name: "Ethereum",
-      percent: "22.7",
-      url: "https://www.tradingview.com/chart/?symbol=CRYPTO%3AETHUSD",
-      price: 6589.17, priceChange: -40.22, priceChangePct: -0.61,
-      priceHistory: [2200,2300,2700,3200,3900,4100,4990,5500,5900,6200,6400,6589],
-      gfScore: { labels: ["Valuation", "Growth", "Profitability", "Safety", "Momentum"], values: [5.7,9.5,8.2,7.3,8.1] },
-      about: "The leading smart contract blockchain powering DeFi, NFTs, and many tokens.",
-      stats: {
-        "Market Cap": "780B USD", "ATH": "6789.12 USD", "Volume 24h": "28.92B USD", "Circulating Supply": "120.2 M", "Max Supply": "—"
-      },
-      facts: [
-        "Ethereum is moving to Proof-of-Stake (Merge complete in 2024).",
-        "Main hub for NFT and DeFi development.",
-        "ETH ETFs set for approval in several countries."
-      ],
-      news: [
-        { source: "CoinDesk", time: "25 mins ago", headline: "Ethereum DeFi Volume Hits New High in Asia" },
-        { source: "Blockworks", time: "1h ago", headline: "ETH ETFs Near Approval After Regulatory Nod" }
-      ],
-      website: "https://ethereum.org/", whitepaper: "https://ethereum.org/en/whitepaper/"
+    "30": {
+      roi: "+15.42%",
+      masterPnL: "+8,924.56",
+      winRate: "58.33%",
+      followersPnL: "+45.82",
+      maxDrawdown: "6.12%",
+      avgPnLPerTrade: "+42.18",
+      wins: 125,
+      losses: 89,
+      profitLossRatio: "2.15 : 1",
+      weeklyTrades: "71.23",
+      avgHoldingTime: "1.12Days",
+      roiVolatility: "4.20%",
+      sharpeRatio: "1.15",
+      sortinoRatio: "1.92"
     },
-    {
-      symbol: "SOL", name: "Solana",
-      percent: "12.8",
-      url: "https://www.tradingview.com/chart/?symbol=CRYPTO%3ASOLUSD",
-      price: 184.22, priceChange: 2.33, priceChangePct: 1.28,
-      priceHistory: [21,33,44,53,60,68,102,128,142,162,176,184],
-      gfScore: { labels: ["Valuation", "Growth", "Profitability", "Safety", "Momentum"], values: [3.3,8.8,7.9,5.2,9.3] },
-      about: "Ultra-fast, scalable smart contract platform, known for its vibrant ecosystem and low fees.",
-      stats: {
-        "Market Cap": "82.7B USD", "ATH": "216.07 USD", "Volume 24h": "7.32B USD", "Circulating Supply": "439.7 M", "Max Supply": "—"
-      },
-      facts: [
-        "Rapidly growing DeFi and meme ecosystem.",
-        "High institutional inflows in 2025.",
-        "Solana Pay launched for merchants globally."
-      ],
-      news: [
-        { source: "SolanaNews", time: "56 mins ago", headline: "Solana Pay Integration Goes Global" },
-        { source: "Blockworks", time: "3h ago", headline: "MEME Coins on Solana: Next Wave of Growth?" }
-      ],
-      website: "https://solana.com/", whitepaper: "https://solana.com/solana-whitepaper.pdf"
+    "90": {
+      roi: "+28.74%",
+      masterPnL: "+18,456.89",
+      winRate: "61.45%",
+      followersPnL: "+124.67",
+      maxDrawdown: "8.94%",
+      avgPnLPerTrade: "+38.94",
+      wins: 387,
+      losses: 243,
+      profitLossRatio: "2.28 : 1",
+      weeklyTrades: "68.91",
+      avgHoldingTime: "1.18Days",
+      roiVolatility: "5.10%",
+      sharpeRatio: "1.32",
+      sortinoRatio: "2.18"
     }
-  ]
+  },
+  
+  // Chart data for earnings and profit
+  chartData: {
+    "7": [
+      { date: "Aug 03", cumulativeROI: 2.1, cumulativeProfit: 85.4, dailyProfit: 85.4 },
+      { date: "Aug 04", cumulativeROI: 4.8, cumulativeProfit: 195.2, dailyProfit: 109.8 },
+      { date: "Aug 05", cumulativeROI: 6.2, cumulativeProfit: 252.1, dailyProfit: 56.9 },
+      { date: "Aug 06", cumulativeROI: 7.9, cumulativeProfit: 321.8, dailyProfit: 69.7 },
+      { date: "Aug 07", cumulativeROI: 8.5, cumulativeProfit: 346.2, dailyProfit: 24.4 },
+      { date: "Aug 08", cumulativeROI: 9.0, cumulativeProfit: 367.1, dailyProfit: -20.9 },
+      { date: "Aug 09", cumulativeROI: 9.26, cumulativeProfit: 377.8, dailyProfit: 10.7 }
+    ],
+    "30": [
+      { date: "Jul 10", cumulativeROI: 1.2, cumulativeProfit: 48.9, dailyProfit: 48.9 },
+      { date: "Jul 15", cumulativeROI: 3.8, cumulativeProfit: 154.7, dailyProfit: 105.8 },
+      { date: "Jul 20", cumulativeROI: 6.9, cumulativeProfit: 281.2, dailyProfit: 126.5 },
+      { date: "Jul 25", cumulativeROI: 9.8, cumulativeProfit: 399.1, dailyProfit: 117.9 },
+      { date: "Jul 30", cumulativeROI: 11.9, cumulativeProfit: 484.6, dailyProfit: 85.5 },
+      { date: "Aug 04", cumulativeROI: 13.7, cumulativeProfit: 558.2, dailyProfit: -73.6 },
+      { date: "Aug 09", cumulativeROI: 15.42, cumulativeProfit: 628.1, dailyProfit: 69.9 }
+    ],
+    "90": [
+      { date: "May 11", cumulativeROI: 2.1, cumulativeProfit: 85.4, dailyProfit: 85.4 },
+      { date: "May 25", cumulativeROI: 5.8, cumulativeProfit: 236.1, dailyProfit: 150.7 },
+      { date: "Jun 08", cumulativeROI: 9.2, cumulativeProfit: 374.8, dailyProfit: 138.7 },
+      { date: "Jun 22", cumulativeROI: 13.1, cumulativeProfit: 533.7, dailyProfit: 158.9 },
+      { date: "Jul 06", cumulativeROI: 17.5, cumulativeProfit: 713.2, dailyProfit: 179.5 },
+      { date: "Jul 20", cumulativeROI: 22.3, cumulativeProfit: 908.1, dailyProfit: 194.9 },
+      { date: "Aug 03", cumulativeROI: 26.1, cumulativeProfit: 1063.4, dailyProfit: -155.3 },
+      { date: "Aug 09", cumulativeROI: 28.74, cumulativeProfit: 1171.2, dailyProfit: 107.8 }
+    ]
+  },
+  
+  lastTradedAt: "2025-08-09 18:11:38"
 };
 
-const months = ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"];
-
 export default function ResultsPage() {
-  const [selectedCrypto, setSelectedCrypto] = useState(null);
+  const [tradeAmount, setTradeAmount] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState("7");
+  const [activeTab, setActiveTab] = useState("Performance");
+  const [chartPeriod, setChartPeriod] = useState("7");
+
+  const handleCopyTrade = () => {
+    if (tradeAmount) {
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 3000);
+    }
+  };
+
+  const currentPerformance = mentor.performance[selectedPeriod];
+  const currentChartData = mentor.chartData[chartPeriod];
 
   return (
-    <div className="results-bg">
-      <div className="results-container">
-        {/* TRADER header */}
-        <div className="trader-profile">
-          <h2>{mentor.name}</h2>
-          <div className="profile-desc">{mentor.profile}</div>
-          <div className="trader-meta">
-            <span>Last update: <b>{mentor.lastUpdate}</b></span>
-            <span> · Portfolio Value: <b>{mentor.portfolioValue}</b></span>
-            <span> · Turnover: <b>{mentor.turnover}</b></span>
+    <div className="results-page">
+      <div className="mentor-header">
+        <h1>{mentor.name}</h1>
+        <p>{mentor.profile}</p>
+        <p>Last Update: {mentor.lastUpdate}</p>
+      </div>
+
+      {/* Basic Statistics */}
+      <div className="basic-stats">
+        <div className="stat-item">
+          <span className="label">Trading Days</span>
+          <span className="value">{mentor.tradingDays}</span>
+        </div>
+        <div className="stat-item">
+          <span className="label">Stability Index</span>
+          <span className="value">{mentor.stabilityIndex}</span>
+        </div>
+        <div className="stat-item">
+          <span className="label">7-Day Matched</span>
+          <span className="value">{mentor.sevenDayMatched}</span>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="tab-navigation">
+        <button 
+          className={activeTab === "Performance" ? "tab-button active" : "tab-button"}
+          onClick={() => setActiveTab("Performance")}
+        >
+          Performance
+        </button>
+        <button 
+          className={activeTab === "Statistics" ? "tab-button active" : "tab-button"}
+          onClick={() => setActiveTab("Statistics")}
+        >
+          Statistics
+        </button>
+      </div>
+
+      {/* Performance Tab */}
+      {activeTab === "Performance" && (
+        <div className="performance-section">
+          <h3>Performance</h3>
+          <div className="period-selector">
+            {["7", "30", "90"].map(period => (
+              <button
+                key={period}
+                className={selectedPeriod === period ? "active" : ""}
+                onClick={() => setSelectedPeriod(period)}
+              >
+                {period} Days
+              </button>
+            ))}
           </div>
-          <div className="trading-style-box">
-            <span>Strategy: </span> <b>AI-Optimized, Crypto-Only</b>
+
+          {/* Performance Metrics */}
+          <div className="performance-grid">
+            <div className="metric-row">
+              <span className="metric-label">ROI</span>
+              <span className="metric-value">{currentPerformance.roi}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Master's PnL</span>
+              <span className="metric-value">{currentPerformance.masterPnL}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Win Rate</span>
+              <span className="metric-value">{currentPerformance.winRate}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Followers' PnL</span>
+              <span className="metric-value">{currentPerformance.followersPnL}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Max. Drawdown</span>
+              <span className="metric-value">{currentPerformance.maxDrawdown}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Avg. PnL per Trade</span>
+              <span className="metric-value">{currentPerformance.avgPnLPerTrade}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Profit-to-Loss Ratio</span>
+              <span className="metric-value">{currentPerformance.profitLossRatio}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Weekly Trades</span>
+              <span className="metric-value">{currentPerformance.weeklyTrades}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Avg. Holding Time</span>
+              <span className="metric-value">{currentPerformance.avgHoldingTime}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">ROI Volatility</span>
+              <span className="metric-value">{currentPerformance.roiVolatility}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Sharpe Ratio</span>
+              <span className="metric-value">{currentPerformance.sharpeRatio}</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-label">Sortino Ratio</span>
+              <span className="metric-value">{currentPerformance.sortinoRatio}</span>
+            </div>
+          </div>
+
+          <div className="win-lose-line-display">
+            <div className="win-lose-container">
+              <div className="win-side">
+                <span className="win-text">Win</span>
+                <span className="win-number">{currentPerformance.wins}</span>
+              </div>
+              <div className="lose-side">
+                <span className="lose-text">Lose</span>
+                <span className="lose-number">{currentPerformance.losses}</span>
+              </div>
+            </div>
+            <div className="connecting-line">
+              <div 
+                className="win-portion" 
+                style={{
+                  width: `${(currentPerformance.wins / (currentPerformance.wins + currentPerformance.losses)) * 100}%`,
+                  height: '100%',
+                  background: '#27ae60',
+                  borderRadius: '4px 0 0 4px'
+                }}
+              ></div>
+              <div 
+                className="lose-portion" 
+                style={{
+                  width: `${(currentPerformance.losses / (currentPerformance.wins + currentPerformance.losses)) * 100}%`,
+                  height: '100%',
+                  background: '#e74c3c',
+                  borderRadius: '0 4px 4px 0'
+                }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="last-traded">
+            <span className="label">Last Traded at</span>
+            <span className="value">{mentor.lastTradedAt}</span>
+          </div>
+          <div className="measured-in">Measured in: USDT</div>
+        </div>
+      )}
+
+      {/* Statistics Tab - FIXED VERSION */}
+      {activeTab === "Statistics" && (
+        <div className="statistics-section">
+          <h3>Statistics</h3>
+          
+          {/* Period selector for charts */}
+          <div className="chart-period-selector">
+            {["7", "30", "90"].map(period => (
+              <button
+                key={period}
+                className={chartPeriod === period ? "active" : ""}
+                onClick={() => setChartPeriod(period)}
+              >
+                {period} Days
+              </button>
+            ))}
+          </div>
+
+          {/* Earnings Line Chart - FIXED */}
+          <div className="chart-container">
+            <h4>Earnings</h4>
+            <div style={{ width: '100%', height: '300px' }}>
+              <ResponsiveContainer>
+                <LineChart 
+                  data={currentChartData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: '#666' }}
+                  />
+                  <YAxis  
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: '#666' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#fff',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px'
+                    }}
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="cumulativeROI" 
+                    stroke="#3498db" 
+                    strokeWidth={2}
+                    name="Cumulative ROI (%)"
+                    dot={{ fill: '#3498db', strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: '#3498db', strokeWidth: 2 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="cumulativeProfit" 
+                    stroke="#27ae60" 
+                    strokeWidth={2}
+                    name="Cumulative Profit (USDT)"
+                    dot={{ fill: '#27ae60', strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: '#27ae60', strokeWidth: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Profit Bar Chart */}
+          <div className="chart-container">
+            <h4>Profit</h4>
+            <div style={{ width: '100%', height: '300px' }}>
+              <ResponsiveContainer>
+                <BarChart 
+                  data={currentChartData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: '#666' }}
+                  />
+                  <YAxis 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: '#666' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#fff',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px'
+                    }}
+                    formatter={(value) => [
+                      `${value >= 0 ? '+' : ''}${value} USDT`,
+                      value >= 0 ? 'Profit' : 'Loss'
+                    ]}
+                  />
+                  <Bar 
+                    dataKey="dailyProfit" 
+                    name="Daily Profit/Loss (USDT)"
+                    radius={[2, 2, 0, 0]}
+                  >
+                    {currentChartData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.dailyProfit >= 0 ? '#27ae60' : '#e74c3c'} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* Copy Trade Section */}
+      <div className="copy-trade-section">
+        <div className="trade-input-container">
+          <div className="recommended-amount">
+            <span className="recommended-label">Recommended Trade Amount:</span>
+            <span className="recommended-value">{mentor.upside} USDT</span>
+          </div>
+          <div className="trading-days-display">
+            <span className="trading-days-label">Trading Days:</span>
+            <span className="trading-days-value">{mentor.tradingDays}</span>
+          </div>
+          <div className="input-section">
+            <input
+              type="text"
+              placeholder="Enter trade amount"
+              value={tradeAmount}
+              onChange={(e) => setTradeAmount(e.target.value)}
+            />
+            <button className="copy-trade-btn" onClick={handleCopyTrade}>Copy Trade</button>
           </div>
         </div>
-
-        {/* CRYPTO HOLDINGS */}
-        <div className="top-holdings" style={{marginTop:18}}>
-          <span style={{fontWeight:600}}>Top Crypto Holdings:</span>
-          {mentor.holdings.map(h => (
-            <button
-              key={h.symbol}
-              className={`hold-chip ${selectedCrypto === h.symbol ? "active" : ""}`}
-              onClick={() => setSelectedCrypto(selectedCrypto === h.symbol ? null : h.symbol)}
-              aria-label={`Show details of ${h.name}`}
-            >
-              {h.symbol} ({h.percent}%)
-            </button>
-          ))}
-        </div>
-
-        {/* CRYPTO INFO */}
-        {selectedCrypto &&
-          <CryptoDetailBox
-            crypto={mentor.holdings.find(h => h.symbol === selectedCrypto)}
-            months={months}
-          />
-        }
-        {!selectedCrypto && (
-          <div className="crypto-keyfacts" style={{marginTop:28, textAlign:"center"}}>
-            <span style={{color:"#888"}}>Click any crypto above to learn everything about it!</span>
-          </div>
+        {showNotification && (
+          <div className="notification">Trade copied successfully!</div>
         )}
       </div>
-    </div>
-  );
-}
 
-function CryptoDetailBox({ crypto, months }) {
-  const priceLineData = {
-    labels: months,
-    datasets: [
-      {
-        label: `${crypto.symbol} Price`,
-        data: crypto.priceHistory,
-        borderColor: '#1fb7ff',
-        backgroundColor: 'rgba(31,183,255,0.13)',
-        fill: true,
-        tension: 0.24,
-        pointRadius: 3
-      }
-    ]
-  };
-  const priceLineOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: { mode: 'nearest', intersect: false }
-    },
-    scales: {
-      x: { grid: { display: false }, title: { display: true, text: "Month" }},
-      y: { grid: { color: "#e3eefb" }, title: { display: true, text: "Price (USD)" } }
-    }
-  };
-
-  const radarData = {
-    labels: crypto.gfScore.labels,
-    datasets: [{
-      label: "GF Score",
-      data: crypto.gfScore.values,
-      backgroundColor: "rgba(31,183,255,0.19)",
-      borderColor: "#1fb7ff",
-      pointBackgroundColor: "#1fb7ff"
-    }]
-  };
-  const radarOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-    },
-    scales: {
-      r: {
-        min: 0, max: 10, ticks: { stepSize: 2, color: "#888" },
-        pointLabels: { color: "#197cdf", font: { size: 13 }},
-        grid: { color: "#f1f7fc" }
-      }
-    }
-  };
-
-  const stats = crypto.stats || {};
-
-  return (
-    <div className="holding-detail-box">
-      <h3>
-        <a href={crypto.url} target="_blank" rel="noopener noreferrer">{crypto.name} ({crypto.symbol})</a>
-      </h3>
-      <div className="crypto-meta">
-        <span style={{fontWeight:700, fontSize:"1.2em", color:"#219b80"}}>${crypto.price.toLocaleString()}</span>{" "}
-        <span className={crypto.priceChange>0 ? "gain" : "loss"}>
-          {crypto.priceChange>0 && "+"}{crypto.priceChange} ({crypto.priceChangePct>0 && "+"}{crypto.priceChangePct}%)
-        </span>
-      </div>
-      <div className="crypto-about" style={{marginBottom:8}}>{crypto.about}</div>
-
-      {/* --- PRICE CHART --- */}
-      <div className="chart-section">
-        <b>Price (Last 12 Months):</b>
-        <div className="mini-chart">
-          <Line data={priceLineData} options={priceLineOptions} height={110} />
-        </div>
-      </div>
-
-      {/* --- RADAR (GF) --- */}
-      <div className="chart-section">
-        <b>GF Score (Valuation, Growth, Profitability, Safety, Momentum):</b>
-        <div className="radar-chart">
-          <Radar data={radarData} options={radarOptions} height={110} />
-        </div>
-      </div>
-
-      {/* --- Key STATS Table --- */}
-      <div className="crypto-keyfacts">
-        <h4>Key Stats</h4>
-        <table>
-          <tbody>
-            {Object.entries(stats).map(([k,v]) =>
-              <tr key={k}><td>{k}</td><td style={{fontWeight:600}}>{v}</td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* --- Key FACTS --- */}
-      {crypto.facts && (
-        <div className="crypto-keyfacts" style={{marginTop:12}}>
-          <h4>Key Facts</h4>
-          <ul>
-            {crypto.facts.map((fact,i) => <li key={i}>{fact}</li>)}
-          </ul>
-        </div>
-      )}
-      {/* --- NEWS --- */}
-      {crypto.news && (
-        <div className="crypto-keyfacts" style={{marginTop:10}}>
-          <h4>Recent News</h4>
-          <ul>
-            {crypto.news.map((n,i) =>
-              <li key={i}><span style={{color:"#888"}}>{n.time} · {n.source}:</span> {n.headline}</li>
-            )}
-          </ul>
-        </div>
-      )}
-      {/* --- LINKS for beginners --- */}
-      <div className="crypto-keyfacts" style={{marginTop:10}}>
-        <h4>Learn More / Whitepaper</h4>
-        <div className="crypto-links">
-          <a href={crypto.website} target="_blank" rel="noopener noreferrer">Website</a>
-          {crypto.whitepaper && <a href={crypto.whitepaper} target="_blank" rel="noopener noreferrer">Whitepaper</a>}
-        </div>
-      </div>
     </div>
   );
 }
