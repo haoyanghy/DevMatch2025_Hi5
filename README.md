@@ -2,23 +2,17 @@
 
 To deploy the contract:
 
-1. Run `npm i`
-2. Run `npx hardhat run scripts/deploy.ts --network sapphireTestnet`
+1. Go to `remix.ethereum.org/`
+2. Import the PortfolioAgent.sol contract under contracts/ folder
+3. Ctrl+S to compile or compile manually at Solidity compiler tab
+4. Go to `Deploy & run transactions` tab
+5. Select `Injected Provider - Metamask` as environment
+6. Select the contract and hit deploy
 
-To test the contract with Remix IDE:
 
-1.
-2.
+To make transactions with the deployed contract:
 
-To test the contract by running the script:
-
-1. Run `npm i`
-2. Add a .env file with PRIVATE_KEY:{key}, replace{key} with your wallet private key
-3. Replace the contract address in scripts/testContract.js with the one you deployed
-4. Run `npx ts-node scripts/testContract.ts`
-
-To config your MetaMask wallet to use Sapphire Testnet:
-
-1.
-2.
-3.
+1. Go to `Deployed Contracts`
+2. Enter 0.0001 eth as value (Get conversion to Wei from https://eth-converter.com/)
+3. Use random hex for submitPreferences function, eg: 0x12341234
+4. Hit the submitPreferences button
