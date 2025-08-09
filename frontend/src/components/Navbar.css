@@ -57,13 +57,16 @@
   font-size: 1rem;
   cursor: pointer;
   text-decoration: none;
+  background: none;
+  color: #163a5f;
+  border: 1px solid #e5edf7;
 }
 .nav-login {
   background: none;
   color: #163a5f;
   border: 1px solid #e5edf7;
 }
-.nav-register {
+.connect-wallet-btn {
   background: linear-gradient(90deg, #1cec63, #1fb7ff);
   color: #fff;
   border: none;
