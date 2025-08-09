@@ -32,9 +32,13 @@ contract PortfolioAgent {
             )
         );
 
-        // Check if user has remaining prompts or needs to pay
+         // Check if user has remaining prompts or needs to pay
         if (promptsRemaining[encryptedAddress] == 0) {
-            require(msg.value == PRICE, "Must pay 0.0001 ETH for 5 prompts");
+            require(msg.value >= PRICE, "Payment must be at least 0.0001 ETH for 5 prompts");
+            if (msg.value > PRICE) {
+                // Refund excess payment
+                payable(msg.sender).transfer(msg.value - PRICE);
+            }
             promptsRemaining[encryptedAddress] = MAX_PROMPTS;
         } else {
             require(msg.value == 0, "No payment needed; prompts remaining");
