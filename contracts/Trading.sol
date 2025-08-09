@@ -10,7 +10,7 @@ contract Trading {
     // User structure
     struct User {
         Role role;
-        bytes32 encryptedAddress;
+        bytes encryptedAddress;
         bytes encryptedPortfolio; 
         bytes encryptedPreferences; 
         bool isActive;
@@ -32,7 +32,7 @@ contract Trading {
     mapping(address => bytes32[]) public userMatches;
     
     // Platform wallet (encrypted)
-    bytes32 private platformEncryptedAddress;
+    bytes private platformEncryptedAddress;
     
     // Events
     event UserRegistered(address indexed user, Role role);
@@ -48,14 +48,13 @@ contract Trading {
     
     // Constructor
     constructor() {
-        platformEncryptedAddress = keccak256(
+        platformEncryptedAddress = 
             Sapphire.encrypt(
                 bytes32(uint256(uint160(msg.sender))),
                 bytes32(0),
                 new bytes(0),
                 new bytes(0)
-            )
-        );
+            );
     }
     
     // Register user with role and portfolio (for Pros)
@@ -68,13 +67,11 @@ contract Trading {
             require(encryptedPortfolio.length == 0, "Noob cannot provide portfolio");
         }
         
-        bytes32 encryptedAddress = keccak256(
-            Sapphire.encrypt(
-                bytes32(uint256(uint160(msg.sender))),
-                bytes32(0),
-                new bytes(0),
-                new bytes(0)
-            )
+        bytes memory encryptedAddress = Sapphire.encrypt(
+            bytes32(0), 
+            bytes32(0),
+            abi.encodePacked(msg.sender), 
+            new bytes(0)
         );
 
         bytes memory encryptedPortfolio = Sapphire.encrypt(
@@ -199,5 +196,42 @@ contract Trading {
     // Get user's matches
     function getUserMatches(address user) external view returns (bytes32[] memory) {
         return userMatches[user];
+    }
+    // Reveal the stored plaintext address for a user (decrypts users[user].encryptedAddress)
+    function revealUserAddress(address user) external view returns (address) {
+        require(users[user].isActive, "User not registered or inactive");
+        bytes memory ct = users[user].encryptedAddress;
+        require(ct.length > 0, "No encrypted address stored");
+        bytes memory pt = Sapphire.decrypt(
+            bytes32(0), 
+            bytes32(0),
+            ct,
+            new bytes(0)
+        );
+        // Convert decrypted bytes to address
+        require(pt.length == 20, "Invalid decrypted address length");
+        address decryptedAddress;
+        assembly {
+            decryptedAddress := mload(add(pt, 20))
+        }
+        return decryptedAddress;
+    }
+    
+    // Reveal portfolio plaintext for a pro
+    function revealPortfolio(address pro) external view returns (bytes memory) {
+        require(users[pro].isActive && users[pro].role == Role.Pro, "Not a registered pro");
+        bytes memory ct = users[pro].encryptedPortfolio;
+        require(ct.length > 0, "No encrypted portfolio stored");
+        bytes memory pt = Sapphire.decrypt(bytes32(uint256(uint160(pro))), bytes32(0), ct, new bytes(0));
+        return pt;
+    }
+    
+    // Reveal preferences plaintext for a noob
+    function revealPreferences(address noob) external view returns (bytes memory) {
+        require(users[noob].isActive && users[noob].role == Role.Noob, "Not a registered noob");
+        bytes memory ct = users[noob].encryptedPreferences;
+        require(ct.length > 0, "No encrypted preferences stored");
+        bytes memory pt = Sapphire.decrypt(bytes32(uint256(uint160(noob))), bytes32(0), ct, new bytes(0));
+        return pt;
     }
 }
