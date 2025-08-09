@@ -60,7 +60,6 @@ export default function SupportPage() {
         <div className="support-contact">
           <h3>Contact Us Directly</h3>
           <div>Email: <a href="mailto:support@yourplatform.com">support@yourplatform.com</a></div>
-          <div>Live Chat: <span>Coming soon</span></div>
         </div>
       </div>
     </div>

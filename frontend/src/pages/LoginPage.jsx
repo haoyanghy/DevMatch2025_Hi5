@@ -1,238 +1,188 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useMetaMask } from 'metamask-react';
 import "./RegisterLogin.css";
 
 function LoginPage({ setUser }) {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const { status, connect, account } = useMetaMask();
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [metamaskAccount, setMetamaskAccount] = useState(null);
-  const [isMetamaskConnected, setIsMetamaskConnected] = useState(false);
+  const [walletConnected, setWalletConnected] = useState(false);
   const navigate = useNavigate();
-
-  const isMetaMaskInstalled = () => {
-    return typeof window !== "undefined" && typeof window.ethereum !== "undefined";
-  };
+  const location = useLocation();
 
   useEffect(() => {
-    checkMetaMaskConnection();
-  }, []);
-
-  const checkMetaMaskConnection = async () => {
-    if (isMetaMaskInstalled()) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        if (accounts.length > 0) {
-          setMetamaskAccount(accounts[0]);
-          setIsMetamaskConnected(true);
-        }
-      } catch (error) {
-        console.error("Error checking MetaMask connection:", error);
-      }
+    if (location.state?.message) {
+      setSuccess(location.state.message);
     }
-  };
+  }, [location.state]);
 
-  const connectMetaMask = async () => {
-    if (!isMetaMaskInstalled()) {
-      setError("MetaMask is not installed. Please install MetaMask to continue.");
-      return;
+  useEffect(() => {
+    if (status === 'connected' && account) {
+      setWalletConnected(true);
+      setError("");
+    } else {
+      setWalletConnected(false);
     }
+  }, [status, account]);
 
+  const handleConnectWallet = async () => {
     try {
       setError("");
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-      
-      if (accounts.length > 0) {
-        setMetamaskAccount(accounts[0]);
-        setIsMetamaskConnected(true);
-        setError("");
-      }
+      await connect();
     } catch (error) {
-      if (error.code === 4001) {
-        setError("Please connect to MetaMask to continue.");
-      } else {
-        setError("Failed to connect to MetaMask. Please try again.");
-      }
-      console.error("MetaMask connection error:", error);
+      console.error('Failed to connect to MetaMask:', error);
+      setError("Failed to connect to MetaMask. Please try again.");
     }
   };
-
-  const disconnectMetaMask = () => {
-    setMetamaskAccount(null);
-    setIsMetamaskConnected(false);
-  };
-
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
-    if (!isMetamaskConnected) {
+    if (!walletConnected) {
       setError("Please connect your MetaMask wallet first.");
       return;
     }
 
-    if (!form.email || !form.password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-    
     setSubmitting(true);
 
-    try {
+    // No backend - just simulate login and redirect
+    const user = {
+      walletAddress: account,
+      name: "Wallet User",
+      id: account
+    };
 
-      const loginData = {
-        ...form,
-        walletAddress: metamaskAccount
-      };
+    // Store user data locally
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('walletAddress', account);
 
-      const response = await axios.post("http://localhost:8000/api/login", form);
+    setUser(user);
+    setSuccess("Login successful! Redirecting to dashboard...");
 
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      
-      setUser(response.data.user);
-      
-      window.location.href = "/dashboard";
-      
-    } catch (err) {
-      if (err.response?.status === 404 && err.response?.data?.message?.includes("wallet")) {
-        setError("No account found with this MetaMask wallet. Please register first.");
-      } else {
-        setError(
-          err.response?.data?.message || "Login failed. Invalid credentials."
-        );
-      }
-      setSubmitting(false);
-    }
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
   }
 
   return (
-    <div className="auth-bg">
-      <div className="auth-card">
-        <div className="auth-card-main">
+    <div className="auth-container">
+      <div className="auth-wrapper">
+        <div className="auth-card">
+          <div className="auth-header">
+            <div className="auth-logo">
+              <div className="logo-icon">📈</div>
+              <span>MirrorTrade</span>
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to continue your trading journey</p>
+          </div>
+
           <form onSubmit={handleSubmit} className="auth-form">
-            <h2>Login</h2>
+            {error && (
+              <div className="alert alert-error">
+                <span className="alert-icon">⚠️</span>
+                {error}
+              </div>
+            )}
             
-            {error && <div className="error-message">{error}</div>}
-            
-            {/* Email Input */}
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                disabled={!isMetamaskConnected || submitting}
-              />
-            </div>
+            {success && (
+              <div className="alert alert-success">
+                <span className="alert-icon">✅</span>
+                {success}
+              </div>
+            )}
 
-            {/* Password Input */}
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                disabled={!isMetamaskConnected || submitting}
-              />
-            </div>
-            
-            {/* Submit Button */}
-            <button 
-              type="submit" 
-              className="auth-submit"
-              disabled={submitting || !isMetamaskConnected}
-            >
-              {submitting ? "Logging in..." : "Login"}
-            </button>
-
-            <div className="auth-actions">
-              <Link to="#" className="auth-link">Forgot password?</Link>
-            </div>
-
-            {/* Register Link */}
-            <p className="auth-actions">
-              Don't have an account? <Link to="/register">Register here</Link>
-            </p>
-          </form>
-        </div>
-
-        <div className="auth-card-side">
-          <h4>Secure Login</h4>
-          <ul className="auth-tips">
-            <li>Only enter your password on the official website.</li>
-            <li>Never share your credentials or wallet data.</li>
-          </ul>
-
-          {/* MetaMask Connection Section */}
-            <div className="metamask-section">
-              <hr className="divider" />
-              <h3>Connect MetaMask Wallet</h3>
-              {!isMetaMaskInstalled() ? (
-                <div className="metamask-warning">
-                  <p>MetaMask is not installed. Please install MetaMask extension to continue.</p>
-                  <a 
-                    href="https://metamask.io/download/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="install-metamask-btn"
-                  >
-                    Install MetaMask
-                  </a>
-                </div>
+            <div className="wallet-section">
+              <label>MetaMask Wallet Connection</label>
+              {!walletConnected ? (
+                <button
+                  type="button"
+                  onClick={handleConnectWallet}
+                  className="wallet-connect-btn"
+                  disabled={status === 'connecting'}
+                >
+                  <span className="btn-icon">🔗</span>
+                  {status === 'connecting' ? 'Connecting...' : 'Connect MetaMask Wallet'}
+                </button>
               ) : (
-                <div className="metamask-connection">
-                  {!isMetamaskConnected ? (
-                    <button 
-                      type="button" 
-                      onClick={connectMetaMask}
-                      className="connect-metamask-btn"
-                      disabled={submitting}
-                    >
-                      Connect MetaMask Wallet
-                    </button>
-                  ) : (
-                    <div className="metamask-connected">
-                      <div className="wallet-info">
-                        <span className="wallet-status">✅ Wallet Connected </span>
-                        <span className="wallet-address">
-                          {metamaskAccount?.slice(0, 6)}...{metamaskAccount?.slice(-4)}
-                        </span>
-                      </div>
-                      <button 
-                        type="button" 
-                        onClick={disconnectMetaMask}
-                        className="disconnect-btn"
-                        disabled={submitting}
-                      >
-                        Disconnect
-                      </button>
+                <div className="wallet-connected">
+                  <div className="wallet-status">
+                    <span className="status-icon">✅</span>
+                    <div className="wallet-info">
+                      <span className="wallet-label">Wallet Connected</span>
+                      <span className="wallet-address">
+                        {account?.slice(0, 8)}...{account?.slice(-6)}
+                      </span>
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
             </div>
+
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={submitting || !walletConnected}
+            >
+              <span className="btn-content">
+                {submitting ? (
+                  <>
+                    <span className="spinner"></span>
+                    Signing In...
+                  </>
+                ) : (
+                  <>
+                    <span className="btn-icon">🔑</span>
+                    Sign In
+                  </>
+                )}
+              </span>
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              Don't have an account?{" "}
+              <Link to="/register" className="auth-link">
+                Create one here
+              </Link>
+            </p>
+          </div>
         </div>
 
+        <div className="auth-features">
+          <h3>Secure Login</h3>
+          <div className="features-list">
+            <div className="feature-item">
+              <span className="feature-icon">🛡️</span>
+              <div>
+                <h4>Bank-Level Security</h4>
+                <p>Your account is protected with advanced encryption</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">⚡</span>
+              <div>
+                <h4>Instant Access</h4>
+                <p>Get immediate access to your trading dashboard</p>
+              </div>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🌐</span>
+              <div>
+                <h4>Multi-Device Sync</h4>
+                <p>Access your account from any device, anywhere</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-  
 export default LoginPage;

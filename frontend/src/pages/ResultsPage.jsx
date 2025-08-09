@@ -398,7 +398,7 @@ export default function ResultsPage() {
       <div className="copy-trade-section">
         <div className="trade-input-container">
           <div className="recommended-amount">
-            <span className="recommended-label">Recommended Trade Amount:</span>
+            <span className="recommended-label">Minimum Trade Amount:</span>
             <span className="recommended-value">{mentor.upside} USDT</span>
           </div>
           <div className="trading-days-display">

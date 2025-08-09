@@ -1,127 +1,288 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
 
 function LandingPage() {
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const startX = useRef(0);
+  const currentX = useRef(0);
+  const sliderRef = useRef(null);
+  const autoSlideRef = useRef(null);
+  
+  const totalSlides = 8;
+
+  const testimonials = [
+    {
+      text: "The quiz perfectly matched me with a trader whose strategy fits my risk level. Great transparency!",
+      author: "Sarah, London"
+    },
+    {
+      text: "Finally found a platform that shows real performance data. The copy trading results speak for themselves.",
+      author: "Mike, Singapore"
+    },
+    {
+      text: "Made 15% profit in my first month. The AI matching really works - found a trader with exactly my risk tolerance.",
+      author: "David, New York"
+    },
+    {
+      text: "Love the transparency. I can see every trade before deciding to copy. No hidden fees, just as promised.",
+      author: "Lisa, Tokyo"
+    },
+    {
+      text: "The platform's simplicity is amazing. Took the quiz, got matched, started earning. Exactly what I needed.",
+      author: "Ahmed, Dubai"
+    },
+    {
+      text: "Been copy trading for 6 months now. Consistent returns and the trader I'm matched with fits my schedule perfectly.",
+      author: "Emma, Sydney"
+    },
+    {
+      text: "As a beginner, this platform gave me confidence. The performance data helped me understand what I was getting into.",
+      author: "Carlos, Mexico City"
+    },
+    {
+      text: "The fee structure is so fair compared to other platforms. 0.2% total and I know exactly where my money goes.",
+      author: "Maria, Berlin"
+    }
+  ];
+
+  // Slide functionality
+  const slideTestimonials = (direction) => {
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentSlideIndex + 1) % totalSlides;
+    } else {
+      newIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+    }
+    setCurrentSlideIndex(newIndex);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlideIndex(index);
+  };
+
+  // Touch/Swipe handlers
+  const handleStart = (e) => {
+    setIsDragging(true);
+    startX.current = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+  };
+
+  const handleMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    currentX.current = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+  };
+
+  const handleEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    const diffX = startX.current - currentX.current;
+    const threshold = 50;
+    
+    if (Math.abs(diffX) > threshold) {
+      if (diffX > 0) {
+        slideTestimonials('next');
+      } else {
+        slideTestimonials('prev');
+      }
+    }
+  };
+
+  // Auto-slide functionality
+  useEffect(() => {
+    autoSlideRef.current = setInterval(() => {
+      slideTestimonials('next');
+    }, 5000);
+
+    return () => {
+      if (autoSlideRef.current) {
+        clearInterval(autoSlideRef.current);
+      }
+    };
+  }, [currentSlideIndex]);
+
+  // Update slider transform
+  useEffect(() => {
+    if (sliderRef.current) {
+      const slideWidth = sliderRef.current.children[0]?.offsetWidth + 20 || 0;
+      sliderRef.current.style.transform = `translateX(-${currentSlideIndex * slideWidth}px)`;
+    }
+  }, [currentSlideIndex]);
+
   return (
-    <div className="landing-container">
-      <header className="hero">
-        <div className="hero-overlay">
-          <div className="hero-content">
-            <h1>
-              Make Smarter Trades <span className="highlight">with AI-Powered Insights</span>
-            </h1>
-            <p>
-              Join <span className="users-number">2,385+</span> active traders using intelligent recommendations matched to their <strong>unique styles</strong>. All signals are data-driven and community-sourced—trade confidently, trade your way.
-            </p>
-            <Link to="/register" className="cta-btn cta-hero">
-              Get Started Free
-            </Link>
-          </div>
-          <div className="hero-image">
-            {/* <img src="demo-dashboard.png" alt="Demo dashboard" /> */}
-          </div>
+    <div className="landing-page">
+      <header className="hero-section">
+        <div className="hero-content">
+          <h1 className="hero-title">
+            Match Your Trading Style with Top Performers
+          </h1>
+          <p className="hero-subtitle">
+            Take our quiz, get matched with a proven trader, and start copy trading with confidence.
+          </p>
+          <Link to="/register" className="cta-button">
+            Register Now
+          </Link>
         </div>
       </header>
 
-      <section className="why-register">
-        <h2>Why Traders Join Us</h2>
-        <div className="why-grid">
-          <div className="why-point">
-            <img src="ai-match.png" alt="" />
-            <h4>AI Personalized Matches</h4>
-            <p>Cut through noise: get custom recommendations for your capital, risk & time horizon.</p>
-          </div>
-          <div className="why-point">
-            <img src="secure-payment.png" alt="" />
-            <h4>Safe Blockchain Payments</h4>
-            <p>Rapid, secure payments—no banks, no cards, complete privacy.</p>
-          </div>
-          <div className="why-point">
-            <img src="instant-access.png" alt="" />
-            <h4>Instant Access After Payment</h4>
-            <p>Lock in your edge immediately—view top traders’ strategies as soon as you pay.</p>
-          </div>
-          <div className="why-point">
-            <img src="privacy.png" alt="" />
-            <h4>Zero Data Leaks</h4>
-            <p>We never view or store your trades—100% privacy by design.</p>
-          </div>
+      <section className="features-grid">
+        <div className="feature-card">
+          <div className="feature-icon">🎯</div>
+          <h3>AI-Powered Matching</h3>
+          <p>Our smart quiz analyzes your trading preferences and matches you with the perfect trader for your style.</p>
         </div>
-        <Link to="/register" className="cta-btn cta-secondary">
-          Join the Community
-        </Link>
-      </section>
 
-      <section className="features">
-        <h2>
-          Power Up Your Trading Edge
-        </h2>
-        <div className="features-list">
-          <div className="feature">
-            <img src="top-traders.png" alt="" />
-            <h3>Live Trader Rankings</h3>
-            <p>Discover the hottest strategies, sorted by transparent live performance.</p>
-          </div>
-          <div className="feature">
-            <img src="personalized.png" alt="" />
-            <h3>Custom For You</h3>
-            <p>Unique results tailored to your goals—no generic signals ever.</p>
-          </div>
-          <div className="feature">
-            <img src="secure-data.png" alt="" />
-            <h3>No Execution, Purely Data</h3>
-            <p>Analyze and act on unbiased info. Your trades remain in your hands.</p>
-          </div>
+        <div className="feature-card">
+          <div className="feature-icon">⚡</div>
+          <h3>Transparent Performance Data</h3>
+          <p>View complete trading history, analytics, and results before deciding to copy trade.</p>
+        </div>
+
+        <div className="feature-card">
+          <div className="feature-icon">🔒</div>
+          <h3>Secure Copy Trading</h3>
+          <p>Simple fee structure: 0.1% platform fee + 0.1% trader fee. Your funds, your control.</p>
+        </div>
+
+        <div className="feature-card">
+          <div className="feature-icon">🛡️</div>
+          <h3>Complete Privacy</h3>
+          <p>We never view or store your trades—100% privacy by design. All decisions remain yours.</p>
+        </div>
+
+        <div className="feature-card">
+          <div className="feature-icon">📊</div>
+          <h3>Real-Time Results</h3>
+          <p>Monitor your copy trades in real-time and receive your coins plus profits at the end of each period.</p>
+        </div>
+
+        <div className="feature-card">
+          <div className="feature-icon">🎯</div>
+          <h3>Personalized Recommendations</h3>
+          <p>Get matched with traders who share your risk tolerance, time horizon, and trading experience level.</p>
         </div>
       </section>
 
       <section className="how-it-works">
-        <h2>How It Works</h2>
-        <div className="steps">
-          <div className="step">
-            <span className="step-number">1</span>
-            <h4>Register & Create Wallet</h4>
-            <p>Sign up to join a network of forward-thinking traders.</p>
+        <div className="container">
+          <h2>How Our Copy Trading Works</h2>
+          <div className="steps-grid">
+            <div className="step">
+              <div className="step-number">1</div>
+              <h3>Take Our Quiz</h3>
+              <p>Answer questions about your trading preferences, risk tolerance, and experience level.</p>
+            </div>
+
+            <div className="step">
+              <div className="step-number">2</div>
+              <h3>Get Matched</h3>
+              <p>Our AI matches you with a top trader who shares your trading style and experience.</p>
+            </div>
+
+            <div className="step">
+              <div className="step-number">3</div>
+              <h3>Review Performance</h3>
+              <p>Analyze the recommended trader's complete performance data, analytics, and trading results.</p>
+            </div>
+
+            <div className="step">
+              <div className="step-number">4</div>
+              <h3>Start Copy Trading</h3>
+              <p>Decide to copy trade. Fees are automatically deducted (0.2% total: platform + trader).</p>
+            </div>
+
+            <div className="step">
+              <div className="step-number">5</div>
+              <h3>Earn Returns</h3>
+              <p>After the trading period, receive your coins back plus any profits earned.</p>
+            </div>
           </div>
-          <div className="step">
-            <span className="step-number">2</span>
-            <h4>Define Your Trading Style</h4>
-            <p>Answer a few quick questions—let our engine understand your preferences.</p>
-          </div>
-          <div className="step">
-            <span className="step-number">3</span>
-            <h4>Pay Securely</h4>
-            <p>Complete your membership with easy, secure blockchain payment.</p>
-          </div>
-          <div className="step">
-            <span className="step-number">4</span>
-            <h4>Unlock Your Picks</h4>
-            <p>
-              Instantly view and explore strategies—<b>all trading decisions remain yours.</b>
-            </p>
+        </div>
+      </section>
+
+      <section className="benefits">
+        <div className="container">
+          <h2>Why Choose Our Platform?</h2>
+          <div className="benefits-grid">
+            <div className="benefit">
+              <h3>Smart Matching System</h3>
+              <p>Our AI-powered quiz ensures you're matched with traders who fit your exact trading profile and goals.</p>
+            </div>
+
+            <div className="benefit">
+              <h3>Transparent Fee Structure</h3>
+              <p>Simple and fair: 0.1% platform fee + 0.1% trader fee. No hidden costs or surprises.</p>
+            </div>
+
+            <div className="benefit">
+              <h3>Full Transparency</h3>
+              <p>Access complete performance analytics and trading history before making any copy trading decisions.</p>
+            </div>
+
+            <div className="benefit">
+              <h3>Your Responsibility, Your Control</h3>
+              <p>All trading decisions and results remain your responsibility. We provide the tools, you make the choices.</p>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="testimonials">
-        <h2>Loved By Traders Worldwide</h2>
-        <div className="testimonial-list">
-          <div className="testimonial">
-            <p>“Onboarding was a breeze. I trusted the payment process and found great strategies immediately!”</p>
-            <span>- Lina, London</span>
-          </div>
-          <div className="testimonial">
-            <p>“Their recommendations fit my style—feels like I have a real edge!”</p>
-            <span>- Jesse, Singapore</span>
+        <div className="container">
+          <h2>What Our Users Say</h2>
+          <div className="testimonials-wrapper">
+            <div 
+              className="testimonial-slider"
+              ref={sliderRef}
+              onMouseDown={handleStart}
+              onMouseMove={handleMove}
+              onMouseUp={handleEnd}
+              onMouseLeave={handleEnd}
+              onTouchStart={handleStart}
+              onTouchMove={handleMove}
+              onTouchEnd={handleEnd}
+            >
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className="testimonial">
+                  <p>"{testimonial.text}"</p>
+                  <cite>- {testimonial.author}</cite>
+                </div>
+              ))}
+            </div>
+            
+            <div className="slider-nav">
+              <button className="navi-btn prev-btn" onClick={() => slideTestimonials('prev')}>‹</button>
+              <button className="navi-btn next-btn" onClick={() => slideTestimonials('next')}>›</button>
+            </div>
+            
+            <div className="slider-dots">
+              {testimonials.map((_, index) => (
+                <span 
+                  key={index}
+                  className={`dot ${index === currentSlideIndex ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                ></span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="disclaimer">
-        <strong>No investment advice. For informational purposes only. All trading carries risk. Your trades, your responsibility.</strong>
+      <section className="cta-section">
+        <div className="container">
+          <h2>Ready to Find Your Perfect Trading Match?</h2>
+          <p>Take our quick quiz and get matched with a top trader today.</p>
+          <Link to="/register" className="cta-button large">
+            Get Started Now
+          </Link>
+          <p className="disclaimer">
+            All trading involves risk. Past performance does not guarantee future results. 
+            You are responsible for all trading decisions and outcomes.
+          </p>
+        </div>
       </section>
-
     </div>
   );
 }
